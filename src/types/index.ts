@@ -58,17 +58,20 @@ export interface Client {
   id: string
   name: string
   industry: string
+  size: string
   location: string
   contactPerson: string
-  email: string
-  phone: string
-  status: 'active' | 'inactive' | 'prospect' | 'paused'
-  priority: 'low' | 'medium' | 'high'
+  contactEmail: string
+  contactPhone: string
+  website: string
+  description: string
+  notes: string
+  status: 'active' | 'inactive' | 'prospect'
   activeJobs: number
-  totalPlacements: number
-  lastContact: string
+  totalHires: number
   userId: string
   createdAt: string
+  updatedAt: string
 }
 
 export interface Campaign {

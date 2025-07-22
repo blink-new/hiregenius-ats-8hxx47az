@@ -1,17 +1,41 @@
-import React, { useState, useEffect } from 'react'
-import { Plus, Search, Filter, MoreHorizontal, Building2, Users, Briefcase, Phone, Mail, MapPin, Calendar, Star } from 'lucide-react'
-import { blink } from '../blink/client'
-import type { Client } from '../types'
+import { useState, useEffect, useCallback } from 'react'
+import { Search, Plus, Building2, Users, Briefcase, Phone, Mail, MapPin, MoreVertical, Edit, Trash2, Eye } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { blink } from '@/blink/client'
+import type { Client } from '@/types'
 
-const Clients: React.FC = () => {
+export function Clients() {
   const [clients, setClients] = useState<Client[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
-  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [sortBy, setSortBy] = useState('name')
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [newClient, setNewClient] = useState({
+    name: '',
+    industry: '',
+    size: '',
+    location: '',
+    website: '',
+    description: '',
+    contactPerson: '',
+    contactEmail: '',
+    contactPhone: '',
+    status: 'active' as const
+  })
 
-  const loadClients = async () => {
+  const loadClients = useCallback(async () => {
     try {
+      setLoading(true)
       const user = await blink.auth.me()
       const clientsData = await blink.db.clients.list({
         where: { userId: user.id },
@@ -23,17 +47,58 @@ const Clients: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadClients()
-  }, [])
+  }, [loadClients])
+
+  const handleCreateClient = async () => {
+    try {
+      const user = await blink.auth.me()
+      await blink.db.clients.create({
+        ...newClient,
+        userId: user.id,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      })
+      
+      setIsCreateDialogOpen(false)
+      setNewClient({
+        name: '',
+        industry: '',
+        size: '',
+        location: '',
+        website: '',
+        description: '',
+        contactPerson: '',
+        contactEmail: '',
+        contactPhone: '',
+        status: 'active'
+      })
+      loadClients()
+    } catch (error) {
+      console.error('Error creating client:', error)
+    }
+  }
 
   const filteredClients = clients.filter(client => {
     const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         client.industry.toLowerCase().includes(searchTerm.toLowerCase())
+                         client.industry.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         client.contactPerson.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = statusFilter === 'all' || client.status === statusFilter
     return matchesSearch && matchesStatus
+  }).sort((a, b) => {
+    switch (sortBy) {
+      case 'name':
+        return a.name.localeCompare(b.name)
+      case 'industry':
+        return a.industry.localeCompare(b.industry)
+      case 'created':
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      default:
+        return 0
+    }
   })
 
   const getStatusColor = (status: string) => {
@@ -41,28 +106,29 @@ const Clients: React.FC = () => {
       case 'active': return 'bg-green-100 text-green-800'
       case 'inactive': return 'bg-gray-100 text-gray-800'
       case 'prospect': return 'bg-blue-100 text-blue-800'
-      case 'paused': return 'bg-yellow-100 text-yellow-800'
       default: return 'bg-gray-100 text-gray-800'
     }
   }
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'text-red-500'
-      case 'medium': return 'text-yellow-500'
-      case 'low': return 'text-green-500'
-      default: return 'text-gray-400'
+  const getSizeColor = (size: string) => {
+    switch (size) {
+      case 'startup': return 'bg-purple-100 text-purple-800'
+      case 'small': return 'bg-blue-100 text-blue-800'
+      case 'medium': return 'bg-green-100 text-green-800'
+      case 'large': return 'bg-orange-100 text-orange-800'
+      case 'enterprise': return 'bg-red-100 text-red-800'
+      default: return 'bg-gray-100 text-gray-800'
     }
   }
 
   if (loading) {
     return (
       <div className="p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-64 bg-gray-200 rounded-lg"></div>
             ))}
           </div>
         </div>
@@ -75,216 +141,339 @@ const Clients: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Clients</h1>
-          <p className="text-gray-600">Manage your client relationships and track engagement</p>
+          <h1 className="text-3xl font-bold text-gray-900">Client Management</h1>
+          <p className="text-gray-600 mt-1">Manage your client companies and relationships</p>
         </div>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Add Client
-        </button>
+        
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Client
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Add New Client</DialogTitle>
+            </DialogHeader>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Company Name *</Label>
+                <Input
+                  id="name"
+                  value={newClient.name}
+                  onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+                  placeholder="Enter company name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="industry">Industry *</Label>
+                <Select value={newClient.industry} onValueChange={(value) => setNewClient({ ...newClient, industry: value })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select industry" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="technology">Technology</SelectItem>
+                    <SelectItem value="finance">Finance</SelectItem>
+                    <SelectItem value="healthcare">Healthcare</SelectItem>
+                    <SelectItem value="retail">Retail</SelectItem>
+                    <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                    <SelectItem value="consulting">Consulting</SelectItem>
+                    <SelectItem value="education">Education</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="size">Company Size</Label>
+                <Select value={newClient.size} onValueChange={(value) => setNewClient({ ...newClient, size: value })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select size" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="startup">Startup (1-10)</SelectItem>
+                    <SelectItem value="small">Small (11-50)</SelectItem>
+                    <SelectItem value="medium">Medium (51-200)</SelectItem>
+                    <SelectItem value="large">Large (201-1000)</SelectItem>
+                    <SelectItem value="enterprise">Enterprise (1000+)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="location">Location</Label>
+                <Input
+                  id="location"
+                  value={newClient.location}
+                  onChange={(e) => setNewClient({ ...newClient, location: e.target.value })}
+                  placeholder="City, Country"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  value={newClient.website}
+                  onChange={(e) => setNewClient({ ...newClient, website: e.target.value })}
+                  placeholder="https://company.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <Select value={newClient.status} onValueChange={(value: 'active' | 'inactive' | 'prospect') => setNewClient({ ...newClient, status: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="prospect">Prospect</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="md:col-span-2 space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={newClient.description}
+                  onChange={(e) => setNewClient({ ...newClient, description: e.target.value })}
+                  placeholder="Brief description of the company..."
+                  rows={3}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contactPerson">Primary Contact Name</Label>
+                <Input
+                  id="contactPerson"
+                  value={newClient.contactPerson}
+                  onChange={(e) => setNewClient({ ...newClient, contactPerson: e.target.value })}
+                  placeholder="Contact person name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contactEmail">Contact Email</Label>
+                <Input
+                  id="contactEmail"
+                  type="email"
+                  value={newClient.contactEmail}
+                  onChange={(e) => setNewClient({ ...newClient, contactEmail: e.target.value })}
+                  placeholder="contact@company.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contactPhone">Contact Phone</Label>
+                <Input
+                  id="contactPhone"
+                  value={newClient.contactPhone}
+                  onChange={(e) => setNewClient({ ...newClient, contactPhone: e.target.value })}
+                  placeholder="+1 (555) 123-4567"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleCreateClient} disabled={!newClient.name || !newClient.industry}>
+                Create Client
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Active Clients</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {clients.filter(c => c.status === 'active').length}
-              </p>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Clients</p>
+                <p className="text-2xl font-bold text-gray-900">{clients.length}</p>
+              </div>
+              <Building2 className="w-8 h-8 text-blue-600" />
             </div>
-            <div className="p-3 bg-green-100 rounded-lg">
-              <Building2 className="w-6 h-6 text-green-600" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Active Clients</p>
+                <p className="text-2xl font-bold text-green-600">{clients.filter(c => c.status === 'active').length}</p>
+              </div>
+              <Users className="w-8 h-8 text-green-600" />
             </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Jobs</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {clients.reduce((sum, client) => sum + client.activeJobs, 0)}
-              </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Prospects</p>
+                <p className="text-2xl font-bold text-blue-600">{clients.filter(c => c.status === 'prospect').length}</p>
+              </div>
+              <Briefcase className="w-8 h-8 text-blue-600" />
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Briefcase className="w-6 h-6 text-blue-600" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Industries</p>
+                <p className="text-2xl font-bold text-purple-600">{new Set(clients.map(c => c.industry)).size}</p>
+              </div>
+              <Building2 className="w-8 h-8 text-purple-600" />
             </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Avg. Rating</p>
-              <p className="text-2xl font-bold text-gray-900">4.8</p>
-            </div>
-            <div className="p-3 bg-yellow-100 rounded-lg">
-              <Star className="w-6 h-6 text-yellow-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Revenue (YTD)</p>
-              <p className="text-2xl font-bold text-gray-900">$2.4M</p>
-            </div>
-            <div className="p-3 bg-purple-100 rounded-lg">
-              <Users className="w-6 h-6 text-purple-600" />
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Search clients..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-400" />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="prospect">Prospect</option>
-              <option value="paused">Paused</option>
-            </select>
-          </div>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Input
+            placeholder="Search clients, industries, or contacts..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
         </div>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue placeholder="Filter by status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="prospect">Prospect</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="name">Company Name</SelectItem>
+            <SelectItem value="industry">Industry</SelectItem>
+            <SelectItem value="created">Date Added</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Clients Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      {/* Client Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredClients.map((client) => (
-          <div key={client.id} className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-semibold text-lg">
-                  {client.name.charAt(0)}
+          <Card key={client.id} className="hover:shadow-lg transition-shadow duration-200">
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-3">
+                  <Avatar className="w-12 h-12">
+                    <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
+                      {client.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <CardTitle className="text-lg">{client.name}</CardTitle>
+                    <p className="text-sm text-gray-600">{client.industry}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">{client.name}</h3>
-                  <p className="text-sm text-gray-600">{client.industry}</p>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreVertical className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                      <Eye className="w-4 h-4 mr-2" />
+                      View Details
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit Client
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="text-red-600">
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete Client
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
-              <div className="flex items-center gap-2">
-                <Star className={`w-4 h-4 ${getPriorityColor(client.priority)} fill-current`} />
-                <button className="p-1 text-gray-400 hover:text-gray-600 rounded">
-                  <MoreHorizontal className="w-4 h-4" />
-                </button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <Badge className={getStatusColor(client.status)}>
+                  {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
+                </Badge>
+                {client.size && (
+                  <Badge variant="outline" className={getSizeColor(client.size)}>
+                    {client.size.charAt(0).toUpperCase() + client.size.slice(1)}
+                  </Badge>
+                )}
               </div>
-            </div>
-
-            <div className="space-y-3 mb-4">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Users className="w-4 h-4" />
-                <span>{client.contactPerson}</span>
+              
+              {client.description && (
+                <p className="text-sm text-gray-600 line-clamp-2">{client.description}</p>
+              )}
+              
+              <div className="space-y-2">
+                {client.contactPerson && (
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Users className="w-4 h-4 mr-2" />
+                    {client.contactPerson}
+                  </div>
+                )}
+                {client.contactEmail && (
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Mail className="w-4 h-4 mr-2" />
+                    {client.contactEmail}
+                  </div>
+                )}
+                {client.contactPhone && (
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Phone className="w-4 h-4 mr-2" />
+                    {client.contactPhone}
+                  </div>
+                )}
+                {client.location && (
+                  <div className="flex items-center text-sm text-gray-600">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    {client.location}
+                  </div>
+                )}
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Mail className="w-4 h-4" />
-                <span>{client.email}</span>
+              
+              <div className="pt-2 border-t">
+                <p className="text-xs text-gray-500">
+                  Added {new Date(client.createdAt).toLocaleDateString()}
+                </p>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Phone className="w-4 h-4" />
-                <span>{client.phone}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <MapPin className="w-4 h-4" />
-                <span>{client.location}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4 text-sm">
-                <div>
-                  <span className="text-gray-600">Active Jobs:</span>
-                  <span className="font-semibold text-gray-900 ml-1">{client.activeJobs}</span>
-                </div>
-                <div>
-                  <span className="text-gray-600">Placements:</span>
-                  <span className="font-semibold text-gray-900 ml-1">{client.totalPlacements}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(client.status)}`}>
-                {client.status}
-              </span>
-              <div className="flex items-center gap-1 text-xs text-gray-500">
-                <Calendar className="w-3 h-3" />
-                {new Date(client.lastContact).toLocaleDateString()}
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
-
-        {filteredClients.length === 0 && (
-          <div className="col-span-full text-center py-12">
-            <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No clients found</h3>
-            <p className="text-gray-600 mb-4">
-              {searchTerm || statusFilter !== 'all' 
-                ? 'Try adjusting your search or filters'
-                : 'Get started by adding your first client'
-              }
-            </p>
-            {!searchTerm && statusFilter === 'all' && (
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Add Your First Client
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
-      {/* Create Client Modal - Placeholder */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">Add New Client</h2>
-            <p className="text-gray-600 mb-4">Client management features coming soon!</p>
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Coming Soon
-              </button>
-            </div>
-          </div>
+      {filteredClients.length === 0 && (
+        <div className="text-center py-12">
+          <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No clients found</h3>
+          <p className="text-gray-600 mb-4">
+            {searchTerm || statusFilter !== 'all' 
+              ? 'Try adjusting your search or filters'
+              : 'Get started by adding your first client company'
+            }
+          </p>
+          {!searchTerm && statusFilter === 'all' && (
+            <Button onClick={() => setIsCreateDialogOpen(true)} className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Your First Client
+            </Button>
+          )}
         </div>
       )}
     </div>
   )
 }
-
-export default Clients

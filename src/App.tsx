@@ -4,6 +4,7 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import { Dashboard } from './pages/Dashboard'
 import { Candidates } from './pages/Candidates'
 import { Jobs } from './pages/Jobs'
+import { Clients } from './pages/Clients'
 import { blink } from '@/blink/client'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -67,7 +68,7 @@ function App() {
       case 'jobs':
         return <Jobs />
       case 'clients':
-        return <div className="p-6"><h1 className="text-2xl font-bold">Clients - Coming Soon</h1></div>
+        return <Clients />
       case 'campaigns':
         return <div className="p-6"><h1 className="text-2xl font-bold">Campaigns - Coming Soon</h1></div>
       case 'analytics':
