@@ -192,19 +192,19 @@ export function Candidates() {
   })
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Candidates</h1>
-          <p className="text-gray-600">Manage and track all your candidates in one place</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Candidates</h1>
+          <p className="text-gray-600 text-sm sm:text-base">Manage and track all your candidates in one place</p>
         </div>
-        <div className="flex space-x-3">
-          <Button variant="outline">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <Button variant="outline" size="sm" className="w-full sm:w-auto">
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
-          <Button>
+          <Button size="sm" className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" />
             Add Candidate
           </Button>
@@ -214,9 +214,9 @@ export function Candidates() {
       {/* AI Insights */}
       <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
         <CardContent className="p-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
+              <div className="p-2 bg-purple-100 rounded-lg flex-shrink-0">
                 <Zap className="h-5 w-5 text-purple-600" />
               </div>
               <div>
@@ -224,7 +224,7 @@ export function Candidates() {
                 <p className="text-sm text-gray-600">3 high-scoring candidates match your active positions</p>
               </div>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="w-full sm:w-auto">
               View Matches
             </Button>
           </div>
@@ -234,74 +234,77 @@ export function Candidates() {
       {/* Filters */}
       <Card>
         <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search candidates by name, title, or skills..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
+          <div className="flex flex-col gap-4">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search candidates by name, title, or skills..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="new">New</SelectItem>
-                <SelectItem value="screening">Screening</SelectItem>
-                <SelectItem value="interview">Interview</SelectItem>
-                <SelectItem value="offer">Offer</SelectItem>
-                <SelectItem value="hired">Hired</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="recent">Most Recent</SelectItem>
-                <SelectItem value="score">AI Score</SelectItem>
-                <SelectItem value="match">Match Score</SelectItem>
-                <SelectItem value="name">Name</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" />
-              More Filters
-            </Button>
+            
+            {/* Filter Row */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="new">New</SelectItem>
+                  <SelectItem value="screening">Screening</SelectItem>
+                  <SelectItem value="interview">Interview</SelectItem>
+                  <SelectItem value="offer">Offer</SelectItem>
+                  <SelectItem value="hired">Hired</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recent">Most Recent</SelectItem>
+                  <SelectItem value="score">AI Score</SelectItem>
+                  <SelectItem value="match">Match Score</SelectItem>
+                  <SelectItem value="name">Name</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button variant="outline" className="w-full sm:w-auto">
+                <Filter className="mr-2 h-4 w-4" />
+                More Filters
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Candidates Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-6">
         {filteredCandidates.map((candidate) => (
           <Card key={candidate.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="h-12 w-12">
+                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                  <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
                     <AvatarImage src={candidate.avatar} />
-                    <AvatarFallback className="bg-blue-100 text-blue-600">
+                    <AvatarFallback className="bg-blue-100 text-blue-600 text-sm">
                       {candidate.firstName[0]}{candidate.lastName[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
                       {candidate.firstName} {candidate.lastName}
                     </h3>
-                    <p className="text-sm text-gray-600">{candidate.title}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">{candidate.title}</p>
                   </div>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="flex-shrink-0">
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -317,37 +320,37 @@ export function Candidates() {
             <CardContent className="space-y-4">
               {/* Contact Info */}
               <div className="space-y-2">
-                <div className="flex items-center text-sm text-gray-600">
-                  <Mail className="mr-2 h-4 w-4" />
-                  {candidate.email}
+                <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                  <Mail className="mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                  <span className="truncate">{candidate.email}</span>
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Phone className="mr-2 h-4 w-4" />
-                  {candidate.phone}
+                <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                  <Phone className="mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                  <span>{candidate.phone}</span>
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <MapPin className="mr-2 h-4 w-4" />
-                  {candidate.location}
+                <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                  <MapPin className="mr-2 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                  <span className="truncate">{candidate.location}</span>
                 </div>
               </div>
 
               {/* AI Scores */}
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                 <div className="text-center">
-                  <div className="text-sm text-gray-600">AI Score</div>
-                  <div className={`text-xl font-bold ${getScoreColor(candidate.aiScore)}`}>
+                  <div className="text-xs text-gray-600">AI Score</div>
+                  <div className={`text-lg sm:text-xl font-bold ${getScoreColor(candidate.aiScore)}`}>
                     {candidate.aiScore}
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-sm text-gray-600">Match</div>
-                  <div className={`text-xl font-bold ${getScoreColor(candidate.matchScore || 0)}`}>
+                  <div className="text-xs text-gray-600">Match</div>
+                  <div className={`text-lg sm:text-xl font-bold ${getScoreColor(candidate.matchScore || 0)}`}>
                     {candidate.matchScore}%
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-sm text-gray-600">Experience</div>
-                  <div className="text-xl font-bold text-gray-900">
+                  <div className="text-xs text-gray-600">Experience</div>
+                  <div className="text-lg sm:text-xl font-bold text-gray-900">
                     {candidate.experience}y
                   </div>
                 </div>
@@ -372,25 +375,27 @@ export function Candidates() {
 
               {/* Status and Actions */}
               <div className="flex items-center justify-between pt-2">
-                <Badge className={getStatusColor(candidate.status)}>
+                <Badge className={`${getStatusColor(candidate.status)} text-xs`}>
                   {candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1)}
                 </Badge>
                 <div className="flex space-x-2">
-                  <Button size="sm" variant="outline">
-                    <ExternalLink className="h-4 w-4" />
+                  <Button size="sm" variant="outline" className="p-2">
+                    <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
-                  <Button size="sm" variant="outline">
-                    <Star className="h-4 w-4" />
+                  <Button size="sm" variant="outline" className="p-2">
+                    <Star className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 </div>
               </div>
 
               {/* Applied Date */}
               <div className="flex items-center text-xs text-gray-500 pt-2 border-t">
-                <Calendar className="mr-1 h-3 w-3" />
-                Applied {new Date(candidate.appliedDate).toLocaleDateString()}
-                <span className="mx-2">•</span>
-                Source: {candidate.source}
+                <Calendar className="mr-1 h-3 w-3 flex-shrink-0" />
+                <span className="truncate">
+                  Applied {new Date(candidate.appliedDate).toLocaleDateString()}
+                  <span className="mx-2">•</span>
+                  Source: {candidate.source}
+                </span>
               </div>
             </CardContent>
           </Card>

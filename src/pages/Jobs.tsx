@@ -211,10 +211,10 @@ Keep it concise but compelling.`,
 
   if (loading) {
     return (
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="h-48 bg-gray-200 rounded-lg"></div>
             ))}
@@ -225,27 +225,27 @@ Keep it concise but compelling.`,
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Jobs</h1>
-          <p className="text-gray-600">Manage your job postings and track performance</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Jobs</h1>
+          <p className="text-gray-600 text-sm sm:text-base">Manage your job postings and track performance</p>
         </div>
         
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
-            <Button className="bg-primary hover:bg-primary/90">
+            <Button className="bg-primary hover:bg-primary/90 w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Create Job
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto mx-4">
             <DialogHeader>
               <DialogTitle>Create New Job</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="title">Job Title</Label>
                   <Input
@@ -266,7 +266,7 @@ Keep it concise but compelling.`,
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="location">Location</Label>
                   <Input
@@ -292,7 +292,7 @@ Keep it concise but compelling.`,
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="salaryMin">Min Salary ($)</Label>
                   <Input
@@ -361,11 +361,11 @@ Keep it concise but compelling.`,
                 />
               </div>
 
-              <div className="flex justify-end space-x-2 pt-4">
-                <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 pt-4">
+                <Button variant="outline" onClick={() => setShowCreateDialog(false)} className="w-full sm:w-auto">
                   Cancel
                 </Button>
-                <Button onClick={handleCreateJob} disabled={!newJob.title || !newJob.company}>
+                <Button onClick={handleCreateJob} disabled={!newJob.title || !newJob.company} className="w-full sm:w-auto">
                   Create Job
                 </Button>
               </div>
@@ -401,23 +401,23 @@ Keep it concise but compelling.`,
       </div>
 
       {/* Jobs Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {filteredJobs.map((job) => (
           <Card key={job.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <CardTitle className="text-lg font-semibold text-gray-900 mb-1">
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 mb-1 truncate">
                     {job.title}
                   </CardTitle>
-                  <p className="text-sm text-gray-600 flex items-center">
-                    <Building2 className="h-4 w-4 mr-1" />
+                  <p className="text-sm text-gray-600 flex items-center truncate">
+                    <Building2 className="h-4 w-4 mr-1 flex-shrink-0" />
                     {job.company}
                   </p>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="flex-shrink-0">
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -437,7 +437,7 @@ Keep it concise but compelling.`,
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
-                <Badge className={getStatusColor(job.status)}>
+                <Badge className={`${getStatusColor(job.status)} text-xs`}>
                   {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
                 </Badge>
                 <div className="flex items-center text-sm text-gray-500">
@@ -448,13 +448,15 @@ Keep it concise but compelling.`,
 
               <div className="space-y-2">
                 <div className="flex items-center text-sm text-gray-600">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  {job.location}
+                  <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">{job.location}</span>
                 </div>
                 {job.salary.min > 0 && (
                   <div className="flex items-center text-sm text-gray-600">
-                    <DollarSign className="h-4 w-4 mr-2" />
-                    ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}
+                    <DollarSign className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <span className="truncate">
+                      ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}
+                    </span>
                   </div>
                 )}
               </div>
@@ -482,7 +484,7 @@ Keep it concise but compelling.`,
         <div className="text-center py-12">
           <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 mb-4 text-sm sm:text-base">
             {searchTerm || statusFilter !== 'all' 
               ? 'Try adjusting your search or filters' 
               : 'Create your first job posting to get started'}

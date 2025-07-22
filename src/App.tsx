@@ -12,6 +12,7 @@ function App() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     const unsubscribe = blink.auth.onAuthStateChanged((state) => {
@@ -23,7 +24,7 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="text-center">
           <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-lg">HG</span>
@@ -37,14 +38,14 @@ function App() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-8">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
+        <div className="text-center max-w-md mx-auto p-6 sm:p-8">
           <div className="h-16 w-16 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center mx-auto mb-6">
             <span className="text-white font-bold text-xl">HG</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">HireGenius</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">HireGenius</h1>
           <p className="text-lg text-gray-600 mb-8">AI-Powered Applicant Tracking System</p>
-          <div className="space-y-4 text-left bg-white p-6 rounded-lg shadow-sm">
+          <div className="space-y-4 text-left bg-white p-4 sm:p-6 rounded-lg shadow-sm">
             <h2 className="font-semibold text-gray-900">Features:</h2>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>• AI-powered candidate scoring & matching</li>
@@ -70,11 +71,11 @@ function App() {
       case 'clients':
         return <Clients />
       case 'campaigns':
-        return <div className="p-6"><h1 className="text-2xl font-bold">Campaigns - Coming Soon</h1></div>
+        return <div className="p-4 sm:p-6"><h1 className="text-xl sm:text-2xl font-bold">Campaigns - Coming Soon</h1></div>
       case 'analytics':
-        return <div className="p-6"><h1 className="text-2xl font-bold">Analytics - Coming Soon</h1></div>
+        return <div className="p-4 sm:p-6"><h1 className="text-xl sm:text-2xl font-bold">Analytics - Coming Soon</h1></div>
       case 'job-board':
-        return <div className="p-6"><h1 className="text-2xl font-bold">Job Board - Coming Soon</h1></div>
+        return <div className="p-4 sm:p-6"><h1 className="text-xl sm:text-2xl font-bold">Job Board - Coming Soon</h1></div>
       default:
         return <Dashboard />
     }
@@ -82,10 +83,22 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header user={user} />
+      <Header 
+        user={user} 
+        onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+        sidebarOpen={sidebarOpen}
+      />
       <div className="flex">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        <main className="flex-1 overflow-auto">
+        <Sidebar 
+          activeTab={activeTab} 
+          onTabChange={(tab) => {
+            setActiveTab(tab)
+            setSidebarOpen(false) // Close sidebar on mobile after selection
+          }}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
+        <main className="flex-1 overflow-auto min-h-[calc(100vh-4rem)]">
           {renderContent()}
         </main>
       </div>

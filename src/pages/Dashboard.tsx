@@ -105,19 +105,19 @@ const getStatusColor = (status: string) => {
 
 export function Dashboard() {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Welcome back! Here's what's happening with your recruitment.</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-600 text-sm sm:text-base">Welcome back! Here's what's happening with your recruitment.</p>
         </div>
-        <div className="flex space-x-3">
-          <Button variant="outline">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <Button variant="outline" size="sm" className="w-full sm:w-auto">
             <Calendar className="mr-2 h-4 w-4" />
             Schedule Interview
           </Button>
-          <Button>
+          <Button size="sm" className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" />
             Add Candidate
           </Button>
@@ -126,18 +126,18 @@ export function Dashboard() {
 
       {/* AI Insights Banner */}
       <Card className="bg-gradient-to-r from-blue-600 to-green-600 text-white">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-white/20 rounded-lg">
-                <Zap className="h-6 w-6" />
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <div className="p-2 sm:p-3 bg-white/20 rounded-lg flex-shrink-0">
+                <Zap className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold">AI Insights</h3>
-                <p className="text-blue-100">Your hiring efficiency increased by 23% this month</p>
+                <h3 className="text-base sm:text-lg font-semibold">AI Insights</h3>
+                <p className="text-blue-100 text-sm sm:text-base">Your hiring efficiency increased by 23% this month</p>
               </div>
             </div>
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" size="sm" className="w-full sm:w-auto">
               View Details
               <ArrowUpRight className="ml-2 h-4 w-4" />
             </Button>
@@ -146,14 +146,14 @@ export function Dashboard() {
       </Card>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Candidates</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Total Candidates</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">247</div>
+            <div className="text-xl sm:text-2xl font-bold">247</div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+12%</span> from last month
             </p>
@@ -162,11 +162,11 @@ export function Dashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Jobs</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Active Jobs</CardTitle>
             <Briefcase className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
+            <div className="text-xl sm:text-2xl font-bold">12</div>
             <p className="text-xs text-muted-foreground">
               <span className="text-blue-600">3</span> new this week
             </p>
@@ -175,11 +175,11 @@ export function Dashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Clients</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Clients</CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">34</div>
+            <div className="text-xl sm:text-2xl font-bold">34</div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+2</span> new clients
             </p>
@@ -188,11 +188,11 @@ export function Dashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Success Rate</CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">78%</div>
+            <div className="text-xl sm:text-2xl font-bold">78%</div>
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+5%</span> improvement
             </p>
@@ -201,19 +201,19 @@ export function Dashboard() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {/* Monthly Performance */}
         <Card>
           <CardHeader>
-            <CardTitle>Monthly Performance</CardTitle>
-            <CardDescription>Hires and applications over time</CardDescription>
+            <CardTitle className="text-base sm:text-lg">Monthly Performance</CardTitle>
+            <CardDescription className="text-sm">Hires and applications over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
               <BarChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
+                <XAxis dataKey="month" fontSize={12} />
+                <YAxis fontSize={12} />
                 <Tooltip />
                 <Bar dataKey="hires" fill="#3B82F6" name="Hires" />
                 <Bar dataKey="applications" fill="#10B981" name="Applications" />
@@ -225,18 +225,18 @@ export function Dashboard() {
         {/* Pipeline Overview */}
         <Card>
           <CardHeader>
-            <CardTitle>Candidate Pipeline</CardTitle>
-            <CardDescription>Current distribution of candidates</CardDescription>
+            <CardTitle className="text-base sm:text-lg">Candidate Pipeline</CardTitle>
+            <CardDescription className="text-sm">Current distribution of candidates</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
                   data={pipelineData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
+                  innerRadius={50}
+                  outerRadius={80}
                   paddingAngle={5}
                   dataKey="value"
                 >
@@ -254,7 +254,7 @@ export function Dashboard() {
                     className="w-3 h-3 rounded-full" 
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-sm text-gray-600">{item.name}: {item.value}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">{item.name}: {item.value}</span>
                 </div>
               ))}
             </div>
@@ -263,28 +263,28 @@ export function Dashboard() {
       </div>
 
       {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {/* Recent Candidates */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Candidates</CardTitle>
-            <CardDescription>Latest candidate applications</CardDescription>
+            <CardTitle className="text-base sm:text-lg">Recent Candidates</CardTitle>
+            <CardDescription className="text-sm">Latest candidate applications</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {recentCandidates.map((candidate) => (
                 <div key={candidate.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">{candidate.name}</h4>
-                    <p className="text-sm text-gray-600">{candidate.position}</p>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-gray-900 text-sm sm:text-base truncate">{candidate.name}</h4>
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">{candidate.position}</p>
                     <p className="text-xs text-gray-500">{candidate.appliedDate}</p>
                   </div>
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
                     <div className="text-right">
-                      <div className="text-sm font-medium text-gray-900">AI Score</div>
-                      <div className="text-lg font-bold text-blue-600">{candidate.score}</div>
+                      <div className="text-xs font-medium text-gray-900">AI Score</div>
+                      <div className="text-sm sm:text-lg font-bold text-blue-600">{candidate.score}</div>
                     </div>
-                    <Badge className={getStatusColor(candidate.status)}>
+                    <Badge className={`${getStatusColor(candidate.status)} text-xs`}>
                       {candidate.status}
                     </Badge>
                   </div>
@@ -297,26 +297,26 @@ export function Dashboard() {
         {/* Today's Interviews */}
         <Card>
           <CardHeader>
-            <CardTitle>Today's Interviews</CardTitle>
-            <CardDescription>Scheduled interviews for today</CardDescription>
+            <CardTitle className="text-base sm:text-lg">Today's Interviews</CardTitle>
+            <CardDescription className="text-sm">Scheduled interviews for today</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {upcomingInterviews.map((interview) => (
                 <div key={interview.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
                       <Clock className="h-4 w-4 text-blue-600" />
                     </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{interview.candidate}</h4>
-                      <p className="text-sm text-gray-600">{interview.position}</p>
+                    <div className="min-w-0">
+                      <h4 className="font-medium text-gray-900 text-sm sm:text-base truncate">{interview.candidate}</h4>
+                      <p className="text-xs sm:text-sm text-gray-600 truncate">{interview.position}</p>
                       <p className="text-xs text-gray-500">{interview.type}</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-medium text-gray-900">{interview.time}</div>
-                    <Button size="sm" variant="outline" className="mt-1">
+                  <div className="text-right flex-shrink-0">
+                    <div className="text-xs sm:text-sm font-medium text-gray-900">{interview.time}</div>
+                    <Button size="sm" variant="outline" className="mt-1 text-xs">
                       Join
                     </Button>
                   </div>

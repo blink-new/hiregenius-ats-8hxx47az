@@ -123,10 +123,10 @@ export function Clients() {
 
   if (loading) {
     return (
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="h-64 bg-gray-200 rounded-lg"></div>
             ))}
@@ -137,22 +137,22 @@ export function Clients() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Client Management</h1>
-          <p className="text-gray-600 mt-1">Manage your client companies and relationships</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Client Management</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Manage your client companies and relationships</p>
         </div>
         
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               Add Client
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto mx-4">
             <DialogHeader>
               <DialogTitle>Add New Client</DialogTitle>
             </DialogHeader>
@@ -269,11 +269,11 @@ export function Clients() {
                 />
               </div>
             </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+            <div className="flex flex-col sm:flex-row justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="w-full sm:w-auto">
                 Cancel
               </Button>
-              <Button onClick={handleCreateClient} disabled={!newClient.name || !newClient.industry}>
+              <Button onClick={handleCreateClient} disabled={!newClient.name || !newClient.industry} className="w-full sm:w-auto">
                 Create Client
               </Button>
             </div>
@@ -282,56 +282,56 @@ export function Clients() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Clients</p>
-                <p className="text-2xl font-bold text-gray-900">{clients.length}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Total Clients</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{clients.length}</p>
               </div>
-              <Building2 className="w-8 h-8 text-blue-600" />
+              <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Clients</p>
-                <p className="text-2xl font-bold text-green-600">{clients.filter(c => c.status === 'active').length}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Active Clients</p>
+                <p className="text-xl sm:text-2xl font-bold text-green-600">{clients.filter(c => c.status === 'active').length}</p>
               </div>
-              <Users className="w-8 h-8 text-green-600" />
+              <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Prospects</p>
-                <p className="text-2xl font-bold text-blue-600">{clients.filter(c => c.status === 'prospect').length}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Prospects</p>
+                <p className="text-xl sm:text-2xl font-bold text-blue-600">{clients.filter(c => c.status === 'prospect').length}</p>
               </div>
-              <Briefcase className="w-8 h-8 text-blue-600" />
+              <Briefcase className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Industries</p>
-                <p className="text-2xl font-bold text-purple-600">{new Set(clients.map(c => c.industry)).size}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Industries</p>
+                <p className="text-xl sm:text-2xl font-bold text-purple-600">{new Set(clients.map(c => c.industry)).size}</p>
               </div>
-              <Building2 className="w-8 h-8 text-purple-600" />
+              <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600" />
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-4">
+        <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
             placeholder="Search clients, industries, or contacts..."
@@ -340,49 +340,51 @@ export function Clients() {
             className="pl-10"
           />
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="prospect">Prospect</SelectItem>
-            <SelectItem value="inactive">Inactive</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="Sort by" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="name">Company Name</SelectItem>
-            <SelectItem value="industry">Industry</SelectItem>
-            <SelectItem value="created">Date Added</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-full sm:w-48">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="prospect">Prospect</SelectItem>
+              <SelectItem value="inactive">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-full sm:w-48">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name">Company Name</SelectItem>
+              <SelectItem value="industry">Industry</SelectItem>
+              <SelectItem value="created">Date Added</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Client Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {filteredClients.map((client) => (
           <Card key={client.id} className="hover:shadow-lg transition-shadow duration-200">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="w-12 h-12">
-                    <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
+                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                  <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                    <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold text-sm">
                       {client.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <CardTitle className="text-lg">{client.name}</CardTitle>
-                    <p className="text-sm text-gray-600">{client.industry}</p>
+                  <div className="min-w-0">
+                    <CardTitle className="text-base sm:text-lg truncate">{client.name}</CardTitle>
+                    <p className="text-sm text-gray-600 truncate">{client.industry}</p>
                   </div>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="flex-shrink-0">
                       <MoreVertical className="w-4 h-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -405,11 +407,11 @@ export function Clients() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-wrap gap-2">
-                <Badge className={getStatusColor(client.status)}>
+                <Badge className={`${getStatusColor(client.status)} text-xs`}>
                   {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
                 </Badge>
                 {client.size && (
-                  <Badge variant="outline" className={getSizeColor(client.size)}>
+                  <Badge variant="outline" className={`${getSizeColor(client.size)} text-xs`}>
                     {client.size.charAt(0).toUpperCase() + client.size.slice(1)}
                   </Badge>
                 )}
@@ -422,26 +424,26 @@ export function Clients() {
               <div className="space-y-2">
                 {client.contactPerson && (
                   <div className="flex items-center text-sm text-gray-600">
-                    <Users className="w-4 h-4 mr-2" />
-                    {client.contactPerson}
+                    <Users className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span className="truncate">{client.contactPerson}</span>
                   </div>
                 )}
                 {client.contactEmail && (
                   <div className="flex items-center text-sm text-gray-600">
-                    <Mail className="w-4 h-4 mr-2" />
-                    {client.contactEmail}
+                    <Mail className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span className="truncate">{client.contactEmail}</span>
                   </div>
                 )}
                 {client.contactPhone && (
                   <div className="flex items-center text-sm text-gray-600">
-                    <Phone className="w-4 h-4 mr-2" />
-                    {client.contactPhone}
+                    <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span className="truncate">{client.contactPhone}</span>
                   </div>
                 )}
                 {client.location && (
                   <div className="flex items-center text-sm text-gray-600">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    {client.location}
+                    <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span className="truncate">{client.location}</span>
                   </div>
                 )}
               </div>
@@ -458,9 +460,9 @@ export function Clients() {
 
       {filteredClients.length === 0 && (
         <div className="text-center py-12">
-          <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <Building2 className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No clients found</h3>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 mb-4 text-sm sm:text-base">
             {searchTerm || statusFilter !== 'all' 
               ? 'Try adjusting your search or filters'
               : 'Get started by adding your first client company'
