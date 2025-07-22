@@ -77,17 +77,19 @@ export interface Client {
 export interface Campaign {
   id: string
   name: string
-  type: 'email' | 'linkedin' | 'sms'
-  status: 'draft' | 'active' | 'paused' | 'completed'
-  targetAudience: string
   subject: string
   content: string
+  type: 'outreach' | 'follow-up' | 'nurture' | 'interview'
+  status: 'draft' | 'scheduled' | 'active' | 'paused' | 'completed'
+  targetAudience: string
+  scheduledDate?: string | null
+  aiPersonalization: boolean
+  userId: string
+  createdAt: string
   sentCount: number
   openRate: number
   clickRate: number
-  responseRate: number
-  createdDate: string
-  userId: string
+  replyRate: number
 }
 
 export interface Analytics {

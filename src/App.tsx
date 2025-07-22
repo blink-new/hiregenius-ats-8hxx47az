@@ -5,6 +5,7 @@ import { Dashboard } from './pages/Dashboard'
 import { Candidates } from './pages/Candidates'
 import { Jobs } from './pages/Jobs'
 import { Clients } from './pages/Clients'
+import { Campaigns } from './pages/Campaigns'
 import { blink } from '@/blink/client'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -71,7 +72,7 @@ function App() {
       case 'clients':
         return <Clients />
       case 'campaigns':
-        return <div className="p-4 sm:p-6"><h1 className="text-xl sm:text-2xl font-bold">Campaigns - Coming Soon</h1></div>
+        return <Campaigns />
       case 'analytics':
         return <div className="p-4 sm:p-6"><h1 className="text-xl sm:text-2xl font-bold">Analytics - Coming Soon</h1></div>
       case 'job-board':
